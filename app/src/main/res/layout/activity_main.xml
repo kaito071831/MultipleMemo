@@ -8,7 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     >
 
-
     <TabHost
         android:id="@android:id/tabhost"
         android:layout_width="match_parent"
@@ -39,15 +38,24 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-
+                    <TextView
+                        android:id="@+id/titlelabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/memo_title" />
 
                     <EditText
                         android:id="@+id/title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
-                        android:inputType="textPersonName"
-                        android:text="@string/memo_title" />
+                        android:inputType="textPersonName" />
+
+                    <TextView
+                        android:id="@+id/editTextlabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/memo_main" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
@@ -56,11 +64,10 @@
                         <EditText
                             android:id="@+id/editText"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ems="10"
-                            android:inputType="textPersonName"
-                            android:text="@string/memo_main" />
+                            android:inputType="textPersonName" />
 
                         <Button
                             android:id="@+id/button"
@@ -82,7 +89,8 @@
                         android:id="@+id/textView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="リスト" />
+                        android:textSize="18sp"
+                        android:text="@string/calculation" />
 
                     <Spinner
                         android:id="@+id/spinner"
@@ -119,6 +127,8 @@
                         android:id="@+id/AddData"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textFontWeight="10"
+                        android:textSize="18sp"
                         android:text="@string/add_product" />
 
                     <TextView

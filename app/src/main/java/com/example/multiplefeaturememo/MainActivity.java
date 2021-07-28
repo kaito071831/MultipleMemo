@@ -23,6 +23,7 @@ import java.io.OutputStreamWriter;
 
 public class MainActivity extends AppCompatActivity {
 
+
     EditText title;
     EditText pt;
     Button bt;
@@ -48,9 +49,7 @@ public class MainActivity extends AppCompatActivity {
     int totalNum;
     String strTotal;
     Button btCalc;
-    TextView pntitle;
     EditText productname;
-    TextView pptitle;
     EditText productprice;
     Button addproduct;
 
@@ -108,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         File dbF = new File(str);
         Boolean fbFlag = dbF.exists();
 
+        //もしstrのディレクトリにdbファイルがなければcreate tableやinsertを実行する
         if(fbFlag){
         }else{
             db.execSQL(qry0);
@@ -116,7 +116,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        //テーブルを参照して中身をcrに渡す
         cr = db.rawQuery(qry2, null);
+
         ad = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
         while(cr.moveToNext()) {  //カーソルを一つづつ動かしデータを取得
@@ -130,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
             ad.add(row);
         }
 
+        //スピナーにリストをセット
         sp.setAdapter(ad);
         sp1.setAdapter(ad);
         sp2.setAdapter(ad);
@@ -137,9 +140,7 @@ public class MainActivity extends AppCompatActivity {
         btCalc.setOnClickListener(new CalcClickListener());
 
         //データベースへのデータ追加処理
-        pntitle = findViewById(R.id.pntitle);
         productname = findViewById(R.id.productname);
-        pptitle = findViewById(R.id.pptitle);
         productprice = findViewById(R.id.productprice);
         addproduct = findViewById(R.id.addproduct);
 
@@ -148,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
         db.close();
     }
 
+    //タブ１のメモの保存
     class TSaveClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v){
@@ -163,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //タブ2の選択されたスピナの合計金額計算
     class CalcClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v){
@@ -184,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //DBに新たな商品を追加
     class AddDataClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
