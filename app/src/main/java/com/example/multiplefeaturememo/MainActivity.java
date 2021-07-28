@@ -58,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         TabHost th = (TabHost)findViewById(android.R.id.tabhost);  //TabHostオブジェクト取得
         th.setup();  //TabHostのセットアップ
 
@@ -94,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         sp2 = findViewById(R.id.spinner2);
         total = findViewById(R.id.total);
         btCalc = findViewById(R.id.totalflag);
-
 
         str = "data/data/" + getPackageName() + "/Tab2.db";
         db = SQLiteDatabase.openOrCreateDatabase(str, null);
