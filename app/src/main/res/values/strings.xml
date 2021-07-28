@@ -3,6 +3,7 @@
     <string name="memo_title">タイトル</string>
     <string name="memo_main">本文</string>
     <string name="memo_save">保存</string>
+    <string name="memo_load">読込</string>
     <string name="calculation">合計金額計算</string>
     <string name="calc_total">計算</string>
     <string name="product_name">商品名</string>

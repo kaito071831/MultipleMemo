@@ -104,8 +104,9 @@ public class MainActivity extends AppCompatActivity {
 
         qry2 = "SELECT * FROM tab2List";
 
-        File dbF = new File(str);
+        File dbF = new File("Tab2.db");
         Boolean fbFlag = dbF.exists();
+
 
         //もしstrのディレクトリにdbファイルがなければcreate tableやinsertを実行する
         if(fbFlag){
@@ -198,16 +199,15 @@ public class MainActivity extends AppCompatActivity {
                 String qry4 = "INSERT INTO tab2List(name, price) VALUES (" + "'" + pn + "'" + "," + pp + ")";
                 db.execSQL(qry4);
                 cr = db.rawQuery(qry2, null);
-                while(cr.moveToNext()) {  //カーソルを一つづつ動かしデータを取得
-                    int i = cr.getColumnIndex("id");  //データをテーブルの要素ごとに取得
-                    int n = cr.getColumnIndex("name");
-                    int p = cr.getColumnIndex("price");
+                cr.moveToLast();
+                int i = cr.getColumnIndex("id");  //データをテーブルの要素ごとに取得
+                int n = cr.getColumnIndex("name");
+                int p = cr.getColumnIndex("price");
 
-                    String name = cr.getString(n);
-                    int price = cr.getInt(p);
-                    String row = name + "(" + price + "円)";
-                    ad.add(row);
-                }
+                String name = cr.getString(n);
+                int price = cr.getInt(p);
+                String row = name + "(" + price + "円)";
+                ad.add(row);
                 productname.setText("");
                 productprice.setText("");
                 db.close();
