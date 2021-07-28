@@ -17,12 +17,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
 public class MainActivity extends AppCompatActivity {
-
 
     EditText title;
     EditText pt;
@@ -79,10 +77,10 @@ public class MainActivity extends AppCompatActivity {
 
         //タブ1の処理
         title = findViewById(R.id.title); //xmlからidがtitleのオブジェクトを取得して代入
-        pt = findViewById(R.id.editText); //xmlから
+        pt = findViewById(R.id.editText);
         bt = findViewById(R.id.button);
 
-        bt.setOnClickListener(new TSaveClickListener());
+        bt.setOnClickListener(new ButtonClickListener());
 
         //タブ2の処理
         //スピナー選択と合計表示の処理
@@ -104,14 +102,14 @@ public class MainActivity extends AppCompatActivity {
 
         qry2 = "SELECT * FROM tab2List";
 
-        //DBにtab2Listというテーブルがなければflagがfalseになる
+        //DBにtab2Listというテーブルがなければflagがtrueになる
         String qry3 = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='tab2List';";
         Cursor c = db.rawQuery(qry3, null);
         c.moveToFirst();
         String result = c.getString(0);
         Boolean flag = result.contains("0");
 
-        //もしflagがfalseならばcreate tableやinsertを実行する
+        //もしflagがtrueならばcreate tableやinsertを実行する
         if(flag){
             db.execSQL(qry0);
             for(int i=0; i<qry1.length; i++) {
@@ -140,22 +138,24 @@ public class MainActivity extends AppCompatActivity {
         sp1.setAdapter(ad);
         sp2.setAdapter(ad);
 
-        btCalc.setOnClickListener(new CalcClickListener());
+        btCalc.setOnClickListener(new ButtonClickListener());
 
         //データベースへのデータ追加処理
         productname = findViewById(R.id.productname);
         productprice = findViewById(R.id.productprice);
         addproduct = findViewById(R.id.addproduct);
 
-        addproduct.setOnClickListener(new AddDataClickListener());
+        addproduct.setOnClickListener(new ButtonClickListener());
 
         db.close();
     }
 
-    //タブ１のメモの保存
-    class TSaveClickListener implements View.OnClickListener {
+    //ボタンのイベント処理クラス
+    class ButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v){
+
+            //タブ１のメモの保存
             if(v == bt){
                 try{
                     FileOutputStream fos = openFileOutput(title.getText().toString()+".txt", Context.MODE_PRIVATE);
@@ -163,15 +163,12 @@ public class MainActivity extends AppCompatActivity {
                     bw.write(pt.getText().toString());
                     bw.flush();
                     fos.close();
+                    title.setText("");
+                    pt.setText("");
                 }catch(Exception e){}
             }
-        }
-    }
 
-    //タブ2の選択されたスピナの合計金額計算
-    class CalcClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v){
+            //タブ2の選択されたスピナの合計金額計算
             if(v == btCalc){
                 spText = sp.getSelectedItem().toString();
                 spText1 = sp1.getSelectedItem().toString();
@@ -187,13 +184,8 @@ public class MainActivity extends AppCompatActivity {
 
                 total.setText("合計金額：" + strTotal + "円");
             }
-        }
-    }
 
-    //DBに新たな商品を追加
-    class AddDataClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
+            //DBに新たな商品を追加
             if(v == addproduct){
                 db = SQLiteDatabase.openOrCreateDatabase(str, null);
                 String pn = productname.getText().toString();
@@ -202,7 +194,8 @@ public class MainActivity extends AppCompatActivity {
                 db.execSQL(qry4);
                 cr = db.rawQuery(qry2, null);
                 cr.moveToLast();
-                int i = cr.getColumnIndex("id");  //データをテーブルの要素ごとに取得
+
+                //データをテーブルから取得
                 int n = cr.getColumnIndex("name");
                 int p = cr.getColumnIndex("price");
 
@@ -214,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
                 productprice.setText("");
                 db.close();
             }
+
         }
     }
 }
