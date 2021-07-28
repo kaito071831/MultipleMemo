@@ -104,15 +104,17 @@ public class MainActivity extends AppCompatActivity {
 
         qry2 = "SELECT * FROM tab2List";
 
-        File dbF = new File("Tab2.db");
-        Boolean fbFlag = dbF.exists();
+        //DBにtab2Listというテーブルがなければflagがfalseになる
+        String qry3 = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='tab2List';";
+        Cursor c = db.rawQuery(qry3, null);
+        c.moveToFirst();
+        String result = c.getString(0);
+        Boolean flag = result.contains("0");
 
-
-        //もしstrのディレクトリにdbファイルがなければcreate tableやinsertを実行する
-        if(fbFlag){
-        }else{
+        //もしflagがfalseならばcreate tableやinsertを実行する
+        if(flag){
             db.execSQL(qry0);
-            for(int i=0; i<qry1.length; i++){
+            for(int i=0; i<qry1.length; i++) {
                 db.execSQL(qry1[i]);
             }
         }
