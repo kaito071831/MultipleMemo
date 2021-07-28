@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,7 +26,33 @@ public class MainActivity extends AppCompatActivity {
     EditText title;
     EditText pt;
     Button bt;
+
+    String str;
+    SQLiteDatabase db;
+    String qry2;
+    Cursor cr;
+    ArrayAdapter<String> ad;
     Spinner sp;
+    Spinner sp1;
+    Spinner sp2;
+    TextView total;
+    String spText;
+    String spText1;
+    String spText2;
+    String intSpText;
+    String intSpText1;
+    String intSpText2;
+    int spInt;
+    int spInt1;
+    int spInt2;
+    int totalNum;
+    String strTotal;
+    Button btCalc;
+    TextView pntitle;
+    EditText productname;
+    TextView pptitle;
+    EditText productprice;
+    Button addproduct;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,17 +88,25 @@ public class MainActivity extends AppCompatActivity {
         bt.setOnClickListener(new TSaveClickListener());
 
         //タブ2の処理
-        String str = "data/data/" + getPackageName() + "/Tab2.db";
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(str, null);
+        //スピナー選択と合計表示の処理
+        sp = findViewById(R.id.spinner);
+        sp1 = findViewById(R.id.spinner1);
+        sp2 = findViewById(R.id.spinner2);
+        total = findViewById(R.id.total);
+        btCalc = findViewById(R.id.totalflag);
+
+
+        str = "data/data/" + getPackageName() + "/Tab2.db";
+        db = SQLiteDatabase.openOrCreateDatabase(str, null);
 
         String qry0 = "CREATE TABLE tab2List" + "(id INTEGER PRIMARY KEY, name STRING, price INTEGER)";
-        String[] qry1 = {"INSERT INTO tab2List(name, price) VALUES ('トマト',100)",
+        String[] qry1 = {"INSERT INTO tab2List(name, price) VALUES ('----',0)",
+                "INSERT INTO tab2List(name, price) VALUES ('トマト',100)",
                 "INSERT INTO tab2List(name, price) VALUES ('きゅうり',80)",
                 "INSERT INTO tab2List(name, price) VALUES ('じゃがいも',110)",
                 "INSERT INTO tab2List(name, price) VALUES ('なす',90)"};
 
-        String qry2 = "SELECT * FROM tab2List";
-
+        qry2 = "SELECT * FROM tab2List";
 
         File dbF = new File(str);
         Boolean fbFlag = dbF.exists();
@@ -84,27 +119,40 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
-        Cursor cr = db.rawQuery(qry2, null);
-        ArrayAdapter<String> ad = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        sp = findViewById(R.id.spinner);
+        cr = db.rawQuery(qry2, null);
+        ad = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
         while(cr.moveToNext()) {  //カーソルを一つづつ動かしデータを取得
             int i = cr.getColumnIndex("id");  //データをテーブルの要素ごとに取得
             int n = cr.getColumnIndex("name");
             int p = cr.getColumnIndex("price");
-            int id = cr.getInt(i);
+
             String name = cr.getString(n);
             int price = cr.getInt(p);
-            String row = id + ":" + name + "(" + price + "円)";
+            String row = name + "(" + price + "円)";
             ad.add(row);
         }
+
         sp.setAdapter(ad);
+        sp1.setAdapter(ad);
+        sp2.setAdapter(ad);
+
+        btCalc.setOnClickListener(new CalcClickListener());
+
+        //データベースへのデータ追加処理
+        pntitle = findViewById(R.id.pntitle);
+        productname = findViewById(R.id.productname);
+        pptitle = findViewById(R.id.pptitle);
+        productprice = findViewById(R.id.productprice);
+        addproduct = findViewById(R.id.addproduct);
+
+        addproduct.setOnClickListener(new AddDataClickListener());
 
         db.close();
     }
 
     class TSaveClickListener implements View.OnClickListener {
+        @Override
         public void onClick(View v){
             if(v == bt){
                 try{
@@ -114,6 +162,54 @@ public class MainActivity extends AppCompatActivity {
                     bw.flush();
                     fos.close();
                 }catch(Exception e){}
+            }
+        }
+    }
+
+    class CalcClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v){
+            if(v == btCalc){
+                spText = sp.getSelectedItem().toString();
+                spText1 = sp1.getSelectedItem().toString();
+                spText2 = sp2.getSelectedItem().toString();
+                intSpText = spText.replaceAll("[^0-9]", "");
+                intSpText1 = spText1.replaceAll("[^0-9]", "");
+                intSpText2 = spText2.replaceAll("[^0-9]", "");
+                spInt = Integer.parseInt(intSpText);
+                spInt1 = Integer.parseInt(intSpText1);
+                spInt2 = Integer.parseInt(intSpText2);
+                totalNum = spInt + spInt1 + spInt2;
+                strTotal = Integer.toString(totalNum);
+
+                total.setText("合計金額：" + strTotal + "円");
+            }
+        }
+    }
+
+    class AddDataClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if(v == addproduct){
+                db = SQLiteDatabase.openOrCreateDatabase(str, null);
+                String pn = productname.getText().toString();
+                int pp = Integer.parseInt(productprice.getText().toString());
+                String qry4 = "INSERT INTO tab2List(name, price) VALUES (" + "'" + pn + "'" + "," + pp + ")";
+                db.execSQL(qry4);
+                cr = db.rawQuery(qry2, null);
+                while(cr.moveToNext()) {  //カーソルを一つづつ動かしデータを取得
+                    int i = cr.getColumnIndex("id");  //データをテーブルの要素ごとに取得
+                    int n = cr.getColumnIndex("name");
+                    int p = cr.getColumnIndex("price");
+
+                    String name = cr.getString(n);
+                    int price = cr.getInt(p);
+                    String row = name + "(" + price + "円)";
+                    ad.add(row);
+                }
+                productname.setText("");
+                productprice.setText("");
+                db.close();
             }
         }
     }
