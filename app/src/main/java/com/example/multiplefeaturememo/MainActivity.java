@@ -206,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
                 db.close();
             }
 
+            //DBから商品を削除する
             if(v == removeproduct){
                 db = SQLiteDatabase.openOrCreateDatabase(str, null);
                 String pn = productname.getText().toString();
