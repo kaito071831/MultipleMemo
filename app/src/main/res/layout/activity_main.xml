@@ -38,24 +38,13 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/titlelabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/memo_title" />
-
                     <EditText
                         android:id="@+id/title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
+                        android:hint="@string/memo_title"
                         android:inputType="textPersonName" />
-
-                    <TextView
-                        android:id="@+id/editTextlabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/memo_main" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
@@ -67,6 +56,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ems="10"
+                            android:hint="@string/memo_main"
                             android:inputType="textPersonName" />
 
                         <Button
@@ -74,6 +64,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/memo_save" />
+
+                        <Button
+                            android:id="@+id/buttonR"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/memo_load" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -129,32 +125,22 @@
                         android:layout_height="wrap_content"
                         android:textFontWeight="10"
                         android:textSize="18sp"
-                        android:text="@string/add_product" />
-
-                    <TextView
-                        android:id="@+id/pntitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/product_name" />
+                        android:text="@string/product_AddOrRemove" />
 
                     <EditText
                         android:id="@+id/productname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
+                        android:hint="@string/product_name"
                         android:inputType="textPersonName" />
-
-                    <TextView
-                        android:id="@+id/pptitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/product_price" />
 
                     <EditText
                         android:id="@+id/productprice"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
+                        android:hint="@string/product_price"
                         android:inputType="number" />
 
                     <Button
@@ -162,6 +148,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/add_product" />
+
+                    <Button
+                        android:id="@+id/removeproduct"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/remove_product" />
 
 
                 </LinearLayout>

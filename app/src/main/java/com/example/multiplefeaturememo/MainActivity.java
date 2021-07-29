@@ -15,40 +15,24 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText title;
-    EditText pt;
-    Button bt;
-
-    String str;
+    EditText title, pt, productname, productprice;
+    Button bt, btR, btCalc, addproduct, removeproduct;
+    String str, qry2, spText, spText1, spText2, intSpText, intSpText1, intSpText2, strTotal;
     SQLiteDatabase db;
-    String qry2;
     Cursor cr;
     ArrayAdapter<String> ad;
-    Spinner sp;
-    Spinner sp1;
-    Spinner sp2;
+    Spinner sp, sp1, sp2;
     TextView total;
-    String spText;
-    String spText1;
-    String spText2;
-    String intSpText;
-    String intSpText1;
-    String intSpText2;
-    int spInt;
-    int spInt1;
-    int spInt2;
-    int totalNum;
-    String strTotal;
-    Button btCalc;
-    EditText productname;
-    EditText productprice;
-    Button addproduct;
+    int spInt, spInt1, spInt2, totalNum;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +62,10 @@ public class MainActivity extends AppCompatActivity {
         title = findViewById(R.id.title); //xmlからidがtitleのオブジェクトを取得して代入
         pt = findViewById(R.id.editText);
         bt = findViewById(R.id.button);
+        btR = findViewById(R.id.buttonR);
 
         bt.setOnClickListener(new ButtonClickListener());
+        btR.setOnClickListener(new ButtonClickListener());
 
         //タブ2の処理
         //スピナー選択と合計表示の処理
@@ -142,8 +128,10 @@ public class MainActivity extends AppCompatActivity {
         productname = findViewById(R.id.productname);
         productprice = findViewById(R.id.productprice);
         addproduct = findViewById(R.id.addproduct);
+        removeproduct = findViewById(R.id.removeproduct);
 
         addproduct.setOnClickListener(new ButtonClickListener());
+        removeproduct.setOnClickListener(new ButtonClickListener());
 
         db.close();
     }
@@ -164,6 +152,19 @@ public class MainActivity extends AppCompatActivity {
                     title.setText("");
                     pt.setText("");
                 }catch(Exception e){}
+            }
+
+            //タブ1のメモの読み込み
+            if(v == btR){
+                try {
+                    FileInputStream fis = openFileInput(title.getText().toString() + ".txt"); //ファイル名「Sample.txt」を入力ストリームとして開く
+                    BufferedReader br = new BufferedReader(new InputStreamReader(fis));  //入力ストリームをバッファードリーダにつなげる
+                    StringBuffer sb = new StringBuffer();  //読み込んだ文字をためるためのバッファーの生成
+                    String str;
+                    while((str = br.readLine()) != null)  //ファイルを1行づつ読み込み
+                        sb.append(str);  //読み込んだ分をバッファ上でつなぎ合わせる
+                    pt.setText(sb);  //エディットテキストに出力
+                } catch (Exception e) {}
             }
 
             //タブ2の選択されたスピナの合計金額計算
@@ -201,6 +202,22 @@ public class MainActivity extends AppCompatActivity {
                 int price = cr.getInt(p);
                 String row = name + "(" + price + "円)";
                 ad.add(row);
+                productname.setText("");
+                productprice.setText("");
+                db.close();
+            }
+
+            if(v == removeproduct){
+                db = SQLiteDatabase.openOrCreateDatabase(str, null);
+                String pn = productname.getText().toString();
+                int pp = Integer.parseInt(productprice.getText().toString());
+                String row = pn + "(" + pp + "円)";
+                String qry5 = "DELETE FROM tab2List WHERE name = " + "'" + pn + "'";
+                db.execSQL(qry5);
+                ad.remove(row);
+                sp.setAdapter(ad);
+                sp1.setAdapter(ad);
+                sp2.setAdapter(ad);
                 productname.setText("");
                 productprice.setText("");
                 db.close();
