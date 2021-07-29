@@ -26,13 +26,12 @@ public class MainActivity extends AppCompatActivity {
 
     EditText title, pt, productname, productprice;
     Button bt, btR, btCalc, addproduct, removeproduct;
-    String str, qry2, spText, spText1, spText2, intSpText, intSpText1, intSpText2, strTotal;
+    String str, qry2;
     SQLiteDatabase db;
     Cursor cr;
     ArrayAdapter<String> ad;
     Spinner sp, sp1, sp2;
     TextView total;
-    int spInt, spInt1, spInt2, totalNum;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,17 +168,17 @@ public class MainActivity extends AppCompatActivity {
 
             //タブ2の選択されたスピナの合計金額計算
             if(v == btCalc){
-                spText = sp.getSelectedItem().toString();
-                spText1 = sp1.getSelectedItem().toString();
-                spText2 = sp2.getSelectedItem().toString();
-                intSpText = spText.replaceAll("[^0-9]", "");
-                intSpText1 = spText1.replaceAll("[^0-9]", "");
-                intSpText2 = spText2.replaceAll("[^0-9]", "");
-                spInt = Integer.parseInt(intSpText);
-                spInt1 = Integer.parseInt(intSpText1);
-                spInt2 = Integer.parseInt(intSpText2);
-                totalNum = spInt + spInt1 + spInt2;
-                strTotal = Integer.toString(totalNum);
+                String spText = sp.getSelectedItem().toString();
+                String spText1 = sp1.getSelectedItem().toString();
+                String spText2 = sp2.getSelectedItem().toString();
+                String intSpText = spText.replaceAll("[^0-9]", "");
+                String intSpText1 = spText1.replaceAll("[^0-9]", "");
+                String intSpText2 = spText2.replaceAll("[^0-9]", "");
+                int spInt = Integer.parseInt(intSpText);
+                int spInt1 = Integer.parseInt(intSpText1);
+                int spInt2 = Integer.parseInt(intSpText2);
+                int totalNum = spInt + spInt1 + spInt2;
+                String strTotal = Integer.toString(totalNum);
 
                 total.setText("合計金額：" + strTotal + "円");
             }
