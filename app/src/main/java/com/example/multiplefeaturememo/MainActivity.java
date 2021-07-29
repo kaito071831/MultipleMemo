@@ -1,6 +1,5 @@
 package com.example.multiplefeaturememo;
 
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -104,9 +103,9 @@ public class MainActivity extends AppCompatActivity {
 
         //DBにtab2Listというテーブルがなければflagがtrueになる
         String qry3 = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='tab2List';";
-        Cursor c = db.rawQuery(qry3, null);
-        c.moveToFirst();
-        String result = c.getString(0);
+        cr = db.rawQuery(qry3, null);
+        cr.moveToFirst();
+        String result = cr.getString(0);
         Boolean flag = result.contains("0");
 
         //もしflagがtrueならばcreate tableやinsertを実行する
@@ -123,8 +122,7 @@ public class MainActivity extends AppCompatActivity {
         ad = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
         while(cr.moveToNext()) {  //カーソルを一つづつ動かしデータを取得
-            int i = cr.getColumnIndex("id");  //データをテーブルの要素ごとに取得
-            int n = cr.getColumnIndex("name");
+            int n = cr.getColumnIndex("name");//データをテーブルの要素ごとに取得
             int p = cr.getColumnIndex("price");
 
             String name = cr.getString(n);
