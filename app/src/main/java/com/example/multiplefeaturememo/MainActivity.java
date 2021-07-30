@@ -51,11 +51,6 @@ public class MainActivity extends AppCompatActivity {
         tab2.setContent(R.id.tab2);
         th.addTab(tab2);
 
-        TabSpec tab3 = th.newTabSpec("tab3"); //tab3のセットアップ
-        tab3.setIndicator("タブ3");
-        tab3.setContent(R.id.tab3);
-        th.addTab(tab3);
-
         th.setCurrentTab(0); //最初のタブをtab1に設定
 
         //タブ1の処理
