@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner sp, sp1, sp2;
     TextView total;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -139,11 +140,11 @@ public class MainActivity extends AppCompatActivity {
     class ButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v){
-
             //タブ１のメモの保存
             if(v == bt){
                 try{
-                    FileOutputStream fos = openFileOutput(title.getText().toString()+".txt", Context.MODE_PRIVATE);
+                    FileOutputStream fos =
+                            openFileOutput(title.getText().toString()+".txt", Context.MODE_PRIVATE);
                     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
                     bw.write(pt.getText().toString());
                     bw.flush();
@@ -168,19 +169,14 @@ public class MainActivity extends AppCompatActivity {
 
             //タブ2の選択されたスピナの合計金額計算
             if(v == btCalc){
-                String spText = sp.getSelectedItem().toString();
-                String spText1 = sp1.getSelectedItem().toString();
-                String spText2 = sp2.getSelectedItem().toString();
-                String intSpText = spText.replaceAll("[^0-9]", "");
-                String intSpText1 = spText1.replaceAll("[^0-9]", "");
-                String intSpText2 = spText2.replaceAll("[^0-9]", "");
-                int spInt = Integer.parseInt(intSpText);
-                int spInt1 = Integer.parseInt(intSpText1);
-                int spInt2 = Integer.parseInt(intSpText2);
-                int totalNum = spInt + spInt1 + spInt2;
-                String strTotal = Integer.toString(totalNum);
+                int spInt =
+                        Integer.parseInt(sp.getSelectedItem().toString().replaceAll("[^0-9]", ""));
+                int spInt1 =
+                        Integer.parseInt(sp1.getSelectedItem().toString().replaceAll("[^0-9]", ""));
+                int spInt2 =
+                        Integer.parseInt(sp2.getSelectedItem().toString().replaceAll("[^0-9]", ""));
 
-                total.setText("合計金額：" + strTotal + "円");
+                total.setText("合計金額：" + Integer.toString(spInt + spInt1 +spInt2) + "円");
             }
 
             //DBに新たな商品を追加
@@ -222,7 +218,6 @@ public class MainActivity extends AppCompatActivity {
                 productprice.setText("");
                 db.close();
             }
-
         }
     }
 }
