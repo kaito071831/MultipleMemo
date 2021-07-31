@@ -55,9 +55,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:minLines="1"
+                            android:maxLines="5"
                             android:ems="10"
                             android:hint="@string/memo_main"
-                            android:inputType="textPersonName" />
+                            android:inputType="textMultiLine" />
 
                         <Button
                             android:id="@+id/button"
@@ -114,6 +116,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/calc_total" />
+
+                    <EditText
+                        android:id="@+id/totaltitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/total_name"
+                        android:inputType="textPersonName" />
+
+                    <Button
+                        android:id="@+id/totalprint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/memo_save" />
 
                     <Space
                         android:layout_width="match_parent"

@@ -6,6 +6,7 @@
     <string name="memo_load">読込</string>
     <string name="calculation">合計金額計算</string>
     <string name="calc_total">計算</string>
+    <string name="total_name">メモのタイトル</string>
     <string name="product_name">追加/削除する商品名</string>
     <string name="product_price">追加/削除する商品の値段</string>
     <string name="product_AddOrRemove">商品を追加または削除する</string>

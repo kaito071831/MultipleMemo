@@ -24,8 +24,8 @@ import java.io.OutputStreamWriter;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText title, pt, productname, productprice;
-    Button bt, btR, btCalc, addproduct, removeproduct;
+    EditText title, pt, totaltitle, productname, productprice;
+    Button bt, btR, btCalc, totalprint, addproduct, removeproduct;
     String str, qry2;
     SQLiteDatabase db;
     Cursor cr;
@@ -63,12 +63,16 @@ public class MainActivity extends AppCompatActivity {
         btR.setOnClickListener(new ButtonClickListener());
 
         //タブ2の処理
-        //スピナー選択と合計表示の処理
+        //スピナー選択と合計表示,テキスト出力の処理
         sp = findViewById(R.id.spinner);
         sp1 = findViewById(R.id.spinner1);
         sp2 = findViewById(R.id.spinner2);
         total = findViewById(R.id.total);
+        totaltitle = findViewById(R.id.totaltitle);
+        totalprint = findViewById(R.id.totalprint);
         btCalc = findViewById(R.id.totalflag);
+
+        totalprint.setOnClickListener(new ButtonClickListener());
 
         str = "data/data/" + getPackageName() + "/Tab2.db";
         db = SQLiteDatabase.openOrCreateDatabase(str, null);
@@ -152,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
             //タブ1のメモの読み込み
             if(v == btR){
                 try {
-                    FileInputStream fis = openFileInput(title.getText().toString() + ".txt"); //ファイル名「Sample.txt」を入力ストリームとして開く
+                    FileInputStream fis = openFileInput(title.getText().toString() + ".txt"); //ファイル名「メモのタイトル.txt」を入力ストリームとして開く
                     BufferedReader br = new BufferedReader(new InputStreamReader(fis));  //入力ストリームをバッファードリーダにつなげる
                     StringBuffer sb = new StringBuffer();  //読み込んだ文字をためるためのバッファーの生成
                     String str;
@@ -172,6 +176,26 @@ public class MainActivity extends AppCompatActivity {
                         Integer.parseInt(sp2.getSelectedItem().toString().replaceAll("[^0-9]", ""));
 
                 total.setText("合計金額：" + Integer.toString(spInt + spInt1 +spInt2) + "円");
+            }
+
+            //商品と合計金額をメモに出力
+            if(v == totalprint){
+                try{
+                    FileOutputStream fos =
+                            openFileOutput(totaltitle.getText().toString()+".txt", Context.MODE_PRIVATE);
+                    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+                    bw.write(sp.getSelectedItem().toString());
+                    bw.newLine();
+                    bw.write(sp1.getSelectedItem().toString());
+                    bw.newLine();
+                    bw.write(sp2.getSelectedItem().toString());
+                    bw.newLine();
+                    bw.write(total.getText().toString());
+                    bw.newLine();
+                    bw.flush();
+                    fos.close();
+                    totaltitle.setText("");
+                }catch (Exception e){}
             }
 
             //DBに新たな商品を追加
