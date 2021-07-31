@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">multiplefeaturememo</string>
+    <string name="app_name">業務メモ</string>
     <string name="memo_title">タイトル/読み込むメモのタイトル</string>
     <string name="memo_main">本文</string>
     <string name="memo_save">保存</string>
