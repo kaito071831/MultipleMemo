@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     Button bt, btR, btCalc, totalprint, addproduct, removeproduct;
     String str, qry2;
     SQLiteDatabase db;
+    DBHelper dbHelper;
     Cursor cr;
     ArrayAdapter<String> ad;
     Spinner[] sp = new Spinner[3];
@@ -74,32 +75,10 @@ public class MainActivity extends AppCompatActivity {
 
         totalprint.setOnClickListener(new ButtonClickListener());
 
-        str = "data/data/" + getPackageName() + "/Tab2.db";
-        db = SQLiteDatabase.openOrCreateDatabase(str, null);
-
-        String qry0 = "CREATE TABLE tab2List" + "(id INTEGER PRIMARY KEY, name STRING, price INTEGER)";
-        String[] qry1 = {"INSERT INTO tab2List(name, price) VALUES ('----',0)",
-                "INSERT INTO tab2List(name, price) VALUES ('トマト',100)",
-                "INSERT INTO tab2List(name, price) VALUES ('きゅうり',80)",
-                "INSERT INTO tab2List(name, price) VALUES ('じゃがいも',110)",
-                "INSERT INTO tab2List(name, price) VALUES ('なす',90)"};
+        dbHelper = new DBHelper(this);
+        db = dbHelper.getWritableDatabase();
 
         qry2 = "SELECT * FROM tab2List";
-
-        //DBにtab2Listというテーブルがなければflagがtrueになる
-        String qry3 = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='tab2List';";
-        cr = db.rawQuery(qry3, null);
-        cr.moveToFirst();
-        String result = cr.getString(0);
-        Boolean flag = result.contains("0");
-
-        //もしflagがtrueならばcreate tableやinsertを実行する
-        if(flag){
-            db.execSQL(qry0);
-            for(String q : qry1) {
-                db.execSQL(q);
-            }
-        }
 
         //テーブルを参照して中身をcrに渡す
         cr = db.rawQuery(qry2, null);
@@ -120,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
         for(Spinner s : sp){
             s.setAdapter(ad);
         }
-
 
         btCalc.setOnClickListener(new ButtonClickListener());
 
@@ -200,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
             //DBに新たな商品を追加
             if(v == addproduct){
-                db = SQLiteDatabase.openOrCreateDatabase(str, null);
+                db = dbHelper.getWritableDatabase();
                 String pn = productname.getText().toString();
                 int pp = Integer.parseInt(productprice.getText().toString());
                 String qry4 = "INSERT INTO tab2List(name, price) VALUES (" + "'" + pn + "'" + "," + pp + ")";
@@ -223,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
             //DBから商品を削除する
             if(v == removeproduct){
-                db = SQLiteDatabase.openOrCreateDatabase(str, null);
+                db = dbHelper.getWritableDatabase();
                 String pn = productname.getText().toString();
                 int pp = Integer.parseInt(productprice.getText().toString());
                 String row = pn + "(" + pp + "円)";
