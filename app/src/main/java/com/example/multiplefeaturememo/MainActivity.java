@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     SQLiteDatabase db;
     Cursor cr;
     ArrayAdapter<String> ad;
-    Spinner sp, sp1, sp2;
+    Spinner[] sp = new Spinner[3];
     TextView total;
 
     @Override
@@ -64,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
 
         //タブ2の処理
         //スピナー選択と合計表示,テキスト出力の処理
-        sp = findViewById(R.id.spinner);
-        sp1 = findViewById(R.id.spinner1);
-        sp2 = findViewById(R.id.spinner2);
+        sp[0] = findViewById(R.id.spinner);
+        sp[1] = findViewById(R.id.spinner1);
+        sp[2] = findViewById(R.id.spinner2);
         total = findViewById(R.id.total);
         totaltitle = findViewById(R.id.totaltitle);
         totalprint = findViewById(R.id.totalprint);
@@ -96,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
         //もしflagがtrueならばcreate tableやinsertを実行する
         if(flag){
             db.execSQL(qry0);
-            for(int i=0; i<qry1.length; i++) {
-                db.execSQL(qry1[i]);
+            for(String q : qry1) {
+                db.execSQL(q);
             }
         }
 
@@ -117,9 +117,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //スピナーにリストをセット
-        sp.setAdapter(ad);
-        sp1.setAdapter(ad);
-        sp2.setAdapter(ad);
+        for(Spinner s : sp){
+            s.setAdapter(ad);
+        }
+
 
         btCalc.setOnClickListener(new ButtonClickListener());
 
@@ -161,21 +162,22 @@ public class MainActivity extends AppCompatActivity {
                     StringBuffer sb = new StringBuffer();  //読み込んだ文字をためるためのバッファーの生成
                     String str;
                     while((str = br.readLine()) != null)  //ファイルを1行づつ読み込み
-                        sb.append(str);  //読み込んだ分をバッファ上でつなぎ合わせる
+                        sb.append(str + "\n");  //読み込んだ分をバッファ上でつなぎ合わせる
                     pt.setText(sb);  //エディットテキストに出力
                 } catch (Exception e) {}
             }
 
             //タブ2の選択されたスピナの合計金額計算
             if(v == btCalc){
-                int spInt =
-                        Integer.parseInt(sp.getSelectedItem().toString().replaceAll("[^0-9]", ""));
-                int spInt1 =
-                        Integer.parseInt(sp1.getSelectedItem().toString().replaceAll("[^0-9]", ""));
-                int spInt2 =
-                        Integer.parseInt(sp2.getSelectedItem().toString().replaceAll("[^0-9]", ""));
-
-                total.setText("合計金額：" + Integer.toString(spInt + spInt1 +spInt2) + "円");
+                int[] spInt = new int[3];
+                for(int i=0; i<spInt.length; i++){
+                    spInt[i] = Integer.parseInt(sp[i].getSelectedItem().toString().replaceAll("[^0-9]", ""));
+                }
+                int totalnum = 0;
+                for (int i : spInt) {
+                    totalnum += i;
+                }
+                total.setText("合計金額：" + Integer.toString(totalnum) + "円");
             }
 
             //商品と合計金額をメモに出力
@@ -184,12 +186,10 @@ public class MainActivity extends AppCompatActivity {
                     FileOutputStream fos =
                             openFileOutput(totaltitle.getText().toString()+".txt", Context.MODE_PRIVATE);
                     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-                    bw.write(sp.getSelectedItem().toString());
-                    bw.newLine();
-                    bw.write(sp1.getSelectedItem().toString());
-                    bw.newLine();
-                    bw.write(sp2.getSelectedItem().toString());
-                    bw.newLine();
+                    for(Spinner s : sp){
+                        bw.write(s.getSelectedItem().toString());
+                        bw.newLine();
+                    }
                     bw.write(total.getText().toString());
                     bw.newLine();
                     bw.flush();
@@ -230,9 +230,9 @@ public class MainActivity extends AppCompatActivity {
                 String qry5 = "DELETE FROM tab2List WHERE name = " + "'" + pn + "'";
                 db.execSQL(qry5);
                 ad.remove(row);
-                sp.setAdapter(ad);
-                sp1.setAdapter(ad);
-                sp2.setAdapter(ad);
+                for(Spinner s : sp){
+                    s.setAdapter(ad);
+                }
                 productname.setText("");
                 productprice.setText("");
                 db.close();
