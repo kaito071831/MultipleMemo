@@ -24,15 +24,15 @@ import java.io.OutputStreamWriter;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText title, pt, totaltitle, productname, productprice;
-    Button bt, btR, btCalc, totalprint, addproduct, removeproduct;
-    String str, qry2;
-    SQLiteDatabase db;
-    DBHelper dbHelper;
-    Cursor cr;
-    ArrayAdapter<String> ad;
-    Spinner[] sp = new Spinner[3];
-    TextView total;
+    private EditText title, pt, totaltitle, productname, productprice;
+    private Button bt, btR, btCalc, totalprint, addproduct, removeproduct;
+    private String str, qry2;
+    private SQLiteDatabase db;
+    private DBHelper dbHelper;
+    private Cursor cr;
+    private ArrayAdapter<String> ad;
+    private Spinner[] sp = new Spinner[3];
+    private TextView total;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
